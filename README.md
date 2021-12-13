@@ -6,13 +6,17 @@ I would much appreciate any help from others, whether it be by contributing or b
 
 ## Supported Platforms  
  - [Spigot/Bukkit](https://getbukkit.org/download/spigot) (Tested Spigot 1.8.9, 1.12.2)
+ - [Bungeecord](https://github.com/SpigotMC/BungeeCord) (Tested Waterfall)
+
 
 ## Planned Platforms
- - BungeeCord
  - Velocity
  - Sponge
  - Forge (I know it should be fixed, but people keep asking me to make a mod anyways)
  - Vanilla/All Clients via Java Agent
 
 ## Config
-*Needs to be filled in*
+ - Customizable messages
+ - Toggles for all listeners, individual for each platform
+
+*Specifics need to be filled in*
