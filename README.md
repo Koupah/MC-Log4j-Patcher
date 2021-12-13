@@ -15,6 +15,18 @@ I would much appreciate any help from others, whether it be by contributing or b
  - Forge (I know it should be fixed, but people keep asking me to make a mod anyways)
  - Vanilla/All Clients via Java Agent
 
+## Features
+
+### Spigot
+ - Chat & Command filter
+ - Item Name filter
+ - Player username filter (for offline/bungee servers) (Yes, usernames can be Log4J formats)
+ - Mob name filter (Spawning & Renaming)
+
+### Bungee
+ - Chat & Command filter
+ - Player username filter (Yes, usernames can be Log4J formats)
+
 ## Config
  - Customizable messages
  - Toggles for all listeners, individual for each platform
