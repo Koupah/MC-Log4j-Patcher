@@ -194,6 +194,9 @@ public class Config implements Loggable {
 	}
 
 	public static void addConfigSettings(String category, List<ConfigEntry<?>> configEntries) {
+		if (configEntries == null)
+			return;
+
 		for (ConfigEntry<?> entry : configEntries) {
 			entry.setCategory(category);
 			settings.put(entry.key, entry);

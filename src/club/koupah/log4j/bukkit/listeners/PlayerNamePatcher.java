@@ -16,11 +16,11 @@ import club.koupah.log4j.global.utils.PUtil;
 
 public class PlayerNamePatcher extends ListenerPatchers implements Loggable {
 
+	private static final String replacement = "Removed Log4J Format";
+
 	public PlayerNamePatcher() {
 		super(Option.BUKKIT_USERNAME_LISTENER);
 	}
-
-	private static final String replacement = "Removed Log4J Format";
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerLogin(AsyncPlayerPreLoginEvent event) {
