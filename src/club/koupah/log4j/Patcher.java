@@ -5,6 +5,7 @@ import java.util.List;
 import club.koupah.log4j.global.configuration.Config;
 import club.koupah.log4j.global.configuration.ConfigEntry;
 import club.koupah.log4j.global.log4j.Log4JFilter;
+import club.koupah.log4j.global.utils.JndiContextPatch;
 import club.koupah.log4j.global.utils.PUtil;
 
 /**
@@ -83,11 +84,11 @@ public interface Patcher {
 				+ formatMsgNoLookupsEnvironment() + "]");
 		PUtil.log("Disabling rmi object URL trust. [Success: " + disableRmiURLTrust() + "]");
 		PUtil.log("Disabling cosnaming object URL trust. [Success: " + disableCosnamingURLTrust() + "]");
-		
 		PUtil.log("Setting Log4J2's Constants value for FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS to \"true\". [Success: "
 				+ PUtil.setField("org.apache.logging.log4j.core.util.Constants",
 						"FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS", true)
 				+ "]");
+		PUtil.log("Executing 0x22's JNDI Context Patcher. [Success: " + JndiContextPatch.execute() + "]");
 	}
 
 	public void patchPlatform();

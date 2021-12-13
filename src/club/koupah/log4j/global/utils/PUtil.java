@@ -100,4 +100,22 @@ public final class PUtil {
 		}
 	}
 
+	/**
+	 * Used in {@link JndiContextPatch JndiContextPatch}
+	 */
+	public static Class<?> classLoaderClassLoad(ClassLoader cl, String className) {
+		Class<?> clazz;
+		try {
+			clazz = cl.loadClass(className);
+		} catch (Throwable t) {
+			try {
+				clazz = Class.forName(className, false, cl);
+			} catch (Throwable t1) {
+				clazz = null;
+			}
+		}
+
+		return clazz;
+	}
+
 }

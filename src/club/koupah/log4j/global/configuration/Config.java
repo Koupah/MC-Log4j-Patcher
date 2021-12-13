@@ -17,6 +17,7 @@ import java.util.Map;
 
 import club.koupah.log4j.Patcher;
 import club.koupah.log4j.global.configuration.ConfigEntry.ActionType;
+import club.koupah.log4j.global.utils.Loggable;
 
 /**
  * Configuration Manager I quickly whipped up! <br>
@@ -26,7 +27,7 @@ import club.koupah.log4j.global.configuration.ConfigEntry.ActionType;
  * @createdAt 8:18:28 pm on 12 Dec 2021
  */
 
-public class Config {
+public class Config implements Loggable {
 
 	/*
 	 * I've never put final on a class declaration before, I should research what it
@@ -142,9 +143,9 @@ public class Config {
 
 			}
 			bw.close();
-			System.out.println("Successfully saved Log4JPatcher Configuration file.");
+			log("Successfully saved Log4JPatcher Configuration file.");
 		} catch (IOException e) {
-			System.out.println("Exception whilst saving configuration to file!");
+			error("Exception whilst saving configuration to file!");
 			e.printStackTrace();
 		}
 
@@ -176,14 +177,14 @@ public class Config {
 			missing.removeAll(loaded);
 
 			if (!missing.isEmpty()) {
-				System.out.println(missing.size() + " Config settings were missing from the file for this platform!");
-				System.out.println(missing.size() + " Saving all Config settings so that the missing ones show.");
+				log(missing.size() + " Config settings were missing from the file for this platform!");
+				log(missing.size() + " Saving all Config settings so that the missing ones show.");
 				saveFile();
 			}
 
-			System.out.println("Successfully loaded Log4JPatcher Configuration file.");
+			log("Successfully loaded Log4JPatcher Configuration file.");
 		} catch (IOException e) {
-			System.out.println("Exception whilst loading configuration from file!");
+			error("Exception whilst loading configuration from file!");
 			e.printStackTrace();
 		}
 	}
