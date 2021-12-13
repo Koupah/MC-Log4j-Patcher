@@ -1,5 +1,6 @@
 package club.koupah.log4j.bukkit.listeners;
 
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -23,11 +24,12 @@ public class ChatPatcher extends ListenerPatchers {
 	public void onChat(AsyncPlayerChatEvent event) {
 		if (PUtil.hasLog4jFormat(event.getMessage())) {
 			if (Option.BUKKIT_CHAT_ACTION.get().asAction() == ActionType.REPLACE) {
-				event.setMessage(PUtil.replaceFormats(event.getMessage(), Option.BUKKIT_REPLACEMENT.get().asString()));
+				event.setMessage(PUtil.replaceFormats(event.getMessage(),
+						ChatColor.translateAlternateColorCodes('&', Option.BUKKIT_REPLACEMENT.get().asString())));
 			} else {
 				// should still nullify message so it cannot be logged accidentally
 				event.setMessage(null);
-				
+
 				event.setCancelled(true);
 			}
 		}

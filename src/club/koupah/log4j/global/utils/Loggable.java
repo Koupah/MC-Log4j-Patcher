@@ -44,7 +44,7 @@ public interface Loggable {
 	public static final String prefixFormat = "[%s] ";
 
 	public default String getLoggerPrefix() {
-		return String.format(prefixFormat, getClass().getName());
+		return String.format(prefixFormat, getClass().getSimpleName());
 	}
 
 }
