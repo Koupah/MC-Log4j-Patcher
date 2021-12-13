@@ -35,7 +35,7 @@ public class Config implements Loggable {
 	 * 
 	 * TODO: Research what final does on class declaration
 	 */
-	public static final class Option {
+	public static class Option {
 
 		public static final List<Option> defaultOptions = new ArrayList<Option>();
 
@@ -65,6 +65,7 @@ public class Config implements Loggable {
 
 		public Option(ConfigEntry<?> configEntry) {
 			this.entry = configEntry;
+			defaultOptions.add(this);
 		}
 
 		public ConfigEntry<?> get() {
@@ -85,8 +86,9 @@ public class Config implements Loggable {
 		this.folder.mkdirs();
 		this.folder.mkdir();
 
-		for (Option option : Option.defaultOptions)
+		for (Option option : Option.defaultOptions) {
 			settings.put(option.entry.getKey(), option.entry);
+		}
 
 		this.file = new File(folder, fileName);
 		if (!this.file.exists()) {
@@ -110,9 +112,7 @@ public class Config implements Loggable {
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
 			List<ConfigEntry<?>> sorted = new ArrayList<ConfigEntry<?>>(settings.values());
 			Collections.sort(sorted, new Comparator<ConfigEntry<?>>() {
-
 				public int compare(ConfigEntry<?> o1, ConfigEntry<?> o2) {
-					// compare two instance of `Score` and return `int` as result.
 					return o2.category.compareTo(o1.category);
 				}
 			});
@@ -178,7 +178,7 @@ public class Config implements Loggable {
 
 			if (!missing.isEmpty()) {
 				log(missing.size() + " Config settings were missing from the file for this platform!");
-				log(missing.size() + " Saving all Config settings so that the missing ones show.");
+				log("Saving all Config settings so that the missing ones show.");
 				saveFile();
 			}
 

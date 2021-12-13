@@ -13,7 +13,8 @@ public class Formatter {
 	}
 
 	public Formatter(Formatter parent, String content) {
-		this.parts = !hasFormat(content) ? new LinkedList<Object>(Arrays.asList(content)) : getParts(this, content, true);
+		this.parts = !hasFormat(content) ? new LinkedList<Object>(Arrays.asList(content))
+				: getParts(this, content, true);
 		this.parent = parent;
 	}
 
@@ -84,12 +85,12 @@ public class Formatter {
 	}
 
 	public static LinkedList<Object> getParts(Formatter parent, String content) {
-		return getParts(parent, content, true);
+		return getParts(parent, content, false);
 	}
 
 	public static LinkedList<Object> getParts(Formatter parent, String content, boolean deep) {
 		LinkedList<Object> parts = new LinkedList<Object>();
-		int[] locations = getFormatIndex(content, deep, false);
+		int[] locations = getFormatIndex(content, false, false);
 
 		String[] results = locations.length == 0 ? empty : new String[locations.length];
 
@@ -142,7 +143,7 @@ public class Formatter {
 				i++;
 				continue;
 			} else if (chars[i] == end && inside != 0) {
-				if ((deep || inside == 1) && !invalid) {
+				if (/*(deep || inside == 1) &&*/ !invalid) {
 					found[complete * 2] = entries[inside - 1];
 					found[(complete * 2) + 1] = i + 1;
 					complete++;
