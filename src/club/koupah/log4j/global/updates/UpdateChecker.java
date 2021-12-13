@@ -16,7 +16,7 @@ import club.koupah.log4j.global.utils.Loggable;
 public class UpdateChecker implements Loggable {
 
 	// Sick variable name!
-	private static final String REPO_RELEASES_API_URL = "https://api.github.com/repos/Koupah/MC-Log4J-Exploit-Checker/releases/latest";
+	private static final String REPO_RELEASES_API_URL = "https://api.github.com/repos/Koupah/MC-Log4j-Patcher/releases/latest";
 
 	boolean checking;
 	UpdateThread thread;
