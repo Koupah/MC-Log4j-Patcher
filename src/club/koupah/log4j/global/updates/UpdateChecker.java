@@ -38,21 +38,28 @@ public class UpdateChecker implements Loggable {
 	}
 
 	public void checkForUpdate() {
+		if (checking) {
+			log("Cannot check for update as we're already checking!");
+			return;
+		}
+
 		checking = true;
 
 		if (Config.Option.ASYNC_UPDATE_CHECK.get().asBoolean()) {
+			log("Checking for update in the background.");
 			thread.start();
 		} else {
+			log("Checking for update.");
 			thread.run();
 			checking = false;
 		}
 	}
 
 	private static class UpdateThread extends Thread {
-		UpdateChecker updateChecker;
+		UpdateChecker updater;
 
 		public UpdateThread(UpdateChecker updateChecker) {
-			this.updateChecker = updateChecker;
+			this.updater = updateChecker;
 		}
 
 		public void run() {
@@ -78,7 +85,6 @@ public class UpdateChecker implements Loggable {
 
 				// If the line isn't null and it does indeed contain atleast 1 tag_name
 				if (line != null && line.contains("tag_name")) {
-					System.out.println(line);
 					String split = line.split("\"tag_name\":")[1];
 
 					/*
@@ -99,12 +105,19 @@ public class UpdateChecker implements Loggable {
 
 					// Remove the surrounding quotation marks
 					sb.setLength(sb.length() - 1);
-					String latest = sb.substring(1);
 
-					System.out.println("[Update Checker] Latest version is " + latest);
+					updater.latestVersion = sb.substring(1);
+					updater.log("Latest version is " + updater.latestVersion);
+
+					if (updater.hasUpdate()) {
+						updater.log("---------------------------------");
+						updater.log("There may be an update available!");
+						updater.log("You're on: " + Patcher.version);
+						updater.log("Latest: " + updater.latestVersion);
+						updater.log("---------------------------------");
+					}
 				} else {
-					System.out
-							.println("[Update Checker] Failed to find a release! Assuming current version is newest.");
+					System.out.println("Failed to find a release! Assuming current version is newest.");
 				}
 			} catch (Exception e) {
 				/*
@@ -116,12 +129,12 @@ public class UpdateChecker implements Loggable {
 				 * so gosh ugly.
 				 */
 
-				System.out.println(
-						"[Update Checker] Exception whilst checking latest version! Assuming current version is newest. [Exception Message: "
+				updater.log(
+						"Exception whilst checking latest version! Assuming current version is newest. [Exception Message: "
 								+ e.getMessage() + "]");
 			}
 
-			updateChecker.checking = false;
+			updater.checking = false;
 		}
 	}
 

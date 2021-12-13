@@ -5,6 +5,7 @@ import java.util.List;
 import club.koupah.log4j.global.configuration.Config;
 import club.koupah.log4j.global.configuration.ConfigEntry;
 import club.koupah.log4j.global.log4j.Log4JFilter;
+import club.koupah.log4j.global.updates.UpdateChecker;
 import club.koupah.log4j.global.utils.JndiContextPatch;
 import club.koupah.log4j.global.utils.PUtil;
 
@@ -18,6 +19,7 @@ public interface Patcher {
 	public static final String name = "Log4JPatcher";
 	public static final String version = "0.0.1";
 	public static final String identifier = name + " [" + version + "]";
+	public static final UpdateChecker updater = new UpdateChecker();
 
 	public abstract List<ConfigEntry<?>> getConfigEntries();
 
@@ -33,10 +35,16 @@ public interface Patcher {
 			PUtil.log("Patcher has already run but will continue.");
 		}
 
+		setProperty(identifier, "true");
+
 		PUtil.log("Initializing Patcher config...");
 		Config.addConfigSettings(getPlatform().getName(), getConfigEntries());
 		createConfig();
 		PUtil.log("");
+
+		if (Config.Option.CHECK_FOR_UPDATES.get().asBoolean()) {
+			updater.checkForUpdate();
+		}
 
 		boolean fixedAny = Config.Option.LOGGER_CHECK.get().asBoolean()
 				|| Config.Option.ADDITIONAL_FIXES.get().asBoolean();
