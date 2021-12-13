@@ -57,6 +57,9 @@ public class Config {
 				"L4J Format",
 				"This replaces the contents of any formats when logger_action is REPLACE. Examples: ${jndi:ldap://abc.xyz/a} -> ${L4J Format}, ${date:yyyy} -> ${L4J Format}. [Any String]"));
 
+		public static final Option ADDITIONAL_FIXES = new Option(new ConfigEntry<Boolean>("additional_fixes", true,
+				"Should we run additional fixes to try and completely break the jndi exploit? Highly recommended to leave this enabled! [true/false]"));
+
 		ConfigEntry<?> entry;
 
 		public Option(ConfigEntry<?> configEntry) {
@@ -68,15 +71,10 @@ public class Config {
 		}
 	}
 
-	private static Map<String, ConfigEntry<?>> settings = new HashMap<String, ConfigEntry<?>>() {
-		{
-			for (Option option : Option.defaultOptions)
-				put(option.entry.getKey(), option.entry);
-		}
-	};
-
 	private static String defaultFolderName = "L4JPatcher";
 	private static String defaultFileName = "config.txt";
+
+	private static Map<String, ConfigEntry<?>> settings = new HashMap<String, ConfigEntry<?>>();
 
 	File folder;
 	File file;
@@ -85,6 +83,9 @@ public class Config {
 		this.folder = new File(folderName);
 		this.folder.mkdirs();
 		this.folder.mkdir();
+
+		for (Option option : Option.defaultOptions)
+			settings.put(option.entry.getKey(), option.entry);
 
 		this.file = new File(folder, fileName);
 		if (!this.file.exists()) {

@@ -28,7 +28,8 @@ public interface Patcher {
 		PUtil.log("");
 
 		if (isAlreadyPatched()) {
-
+			handlePatcherAlreadyRun();
+			PUtil.log("Patcher has already run but will continue.");
 		}
 
 		PUtil.log("Initializing Patcher config...");
@@ -36,17 +37,27 @@ public interface Patcher {
 		createConfig();
 		PUtil.log("");
 
-		PUtil.log("Attempting to patch all Log4J formats (including jndi) from Logger.");
-		patchLogger();
-		PUtil.log("");
+		boolean fixedAny = Config.Option.LOGGER_CHECK.get().asBoolean()
+				|| Config.Option.ADDITIONAL_FIXES.get().asBoolean();
 
-		PUtil.log("Performing other changes, you can safely ignore these if they fail.");
-		PUtil.log(" - These don't really help, but may as well run them");
-		patchJndi();
-		PUtil.log("");
+		if (Config.Option.LOGGER_CHECK.get().asBoolean()) {
+			PUtil.log("Attempting to patch all Log4J formats (including jndi) from Logger.");
+			patchLogger();
+			PUtil.log("");
+		}
 
-		PUtil.log("Generic Patches complete.");
-		PUtil.log("");
+		if (Config.Option.ADDITIONAL_FIXES.get().asBoolean()) {
+			PUtil.log("Attempting additional fixes, you can safely ignore these if they fail.");
+			PUtil.log(" - These are just additional safety measures, not required.");
+			patchJndi();
+			PUtil.log("");
+		}
+
+		// Don't want to print this if there was no Generic Patches lol
+		if (fixedAny) {
+			PUtil.log("Generic Patches complete.");
+			PUtil.log("");
+		}
 
 		PUtil.log("Running Platform specific Patches...");
 		patchPlatform();
@@ -54,19 +65,25 @@ public interface Patcher {
 		enabled("Enabled Log4j " + patcherName + " Patcher v" + version + ".");
 	}
 
+	/*
+	 * May want to implement this on some platforms
+	 */
+	public default void handlePatcherAlreadyRun() {
+		return;
+	}
+
 	public default void patchLogger() {
 		PUtil.log("Adding Log4J Log Filter. [Success: " + Log4JFilter.addFilter() + "]");
 	}
 
 	public default void patchJndi() {
-		PUtil.log("Disabling rmi object URL trust. [Success: " + disableRmiURLTrust() + "]");
-		PUtil.log("Disabling cosnaming object URL trust. [Success: " + disableCosnamingURLTrust() + "]");
-
 		PUtil.log("Setting formatMsgNoLookups system property to \"true\". [Success: " + formatMsgNoLookupsProperty()
 				+ "]");
 		PUtil.log("Setting FORMAT_MSG_NO_LOOKUPS environment variable to \"true\". [Success: "
 				+ formatMsgNoLookupsEnvironment() + "]");
-
+		PUtil.log("Disabling rmi object URL trust. [Success: " + disableRmiURLTrust() + "]");
+		PUtil.log("Disabling cosnaming object URL trust. [Success: " + disableCosnamingURLTrust() + "]");
+		
 		PUtil.log("Setting Log4J2's Constants value for FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS to \"true\". [Success: "
 				+ PUtil.setField("org.apache.logging.log4j.core.util.Constants",
 						"FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS", true)
