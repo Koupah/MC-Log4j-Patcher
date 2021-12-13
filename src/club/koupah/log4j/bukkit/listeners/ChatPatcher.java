@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import club.koupah.log4j.bukkit.BukkitPatcher.Option;
 import club.koupah.log4j.bukkit.ListenerPatchers;
@@ -22,6 +23,21 @@ public class ChatPatcher extends ListenerPatchers {
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onChat(AsyncPlayerChatEvent event) {
+		if (PUtil.hasLog4jFormat(event.getMessage())) {
+			if (Option.BUKKIT_CHAT_ACTION.get().asAction() == ActionType.REPLACE) {
+				event.setMessage(PUtil.replaceFormats(event.getMessage(),
+						ChatColor.translateAlternateColorCodes('&', Option.BUKKIT_REPLACEMENT.get().asString())));
+			} else {
+				// should still nullify message so it cannot be logged accidentally
+				event.setMessage(null);
+
+				event.setCancelled(true);
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onCommandPreProcess(PlayerCommandPreprocessEvent event) {
 		if (PUtil.hasLog4jFormat(event.getMessage())) {
 			if (Option.BUKKIT_CHAT_ACTION.get().asAction() == ActionType.REPLACE) {
 				event.setMessage(PUtil.replaceFormats(event.getMessage(),
