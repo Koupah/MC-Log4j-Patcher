@@ -1,0 +1,6 @@
+name: Log4JPatcher
+version: "1.0"
+author: Koupah
+main: club.koupah.log4j.bukkit.BukkitPatcher
+description: Log4J Exploit Patcher
+api: []
