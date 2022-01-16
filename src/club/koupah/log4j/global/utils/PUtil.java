@@ -79,13 +79,11 @@ public final class PUtil {
 			field.set(instance, newValue);
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
 			return false;
 		}
 
 	}
 
-	@SuppressWarnings("unchecked")
 	public static boolean setEnv(String key, String value) {
 		try {
 			Map<String, String> env = System.getenv();
